@@ -1,7 +1,7 @@
 {
   "automationId": "699945e13a446ccedab6811f",
   "automationName": "Unnamed Automation",
-  "version": "v1",
+  "version": "v2",
   "mode": "multi-file",
   "dependencies": [
     {
@@ -14,5 +14,5 @@
     "CUSTOMER_EMAILS",
     "CUSTOMER_EMAILS_FILE"
   ],
-  "syncedAt": "2026-02-22T09:52:48.315Z"
+  "syncedAt": "2026-02-22T10:04:51.873Z"
 }
