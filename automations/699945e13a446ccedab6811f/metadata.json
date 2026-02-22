@@ -1,0 +1,18 @@
+{
+  "automationId": "699945e13a446ccedab6811f",
+  "automationName": "Unnamed Automation",
+  "version": "v1",
+  "mode": "multi-file",
+  "dependencies": [
+    {
+      "id": "1771683364405_3",
+      "name": "fs",
+      "version": "latest"
+    }
+  ],
+  "environmentVariables": [
+    "CUSTOMER_EMAILS",
+    "CUSTOMER_EMAILS_FILE"
+  ],
+  "syncedAt": "2026-02-22T09:52:48.315Z"
+}
