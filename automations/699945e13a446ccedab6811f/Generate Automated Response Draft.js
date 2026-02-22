@@ -3,6 +3,7 @@ const emails = getContext("emails")
 const categories = getContext("categories")
 const sentiments = getContext("sentiments")
 const urgency = getContext("urgency")
+const languages = getContext("languages") // Get detected language array
 
 if (!emails || !categories || !sentiments || !urgency) {
   console.error("Missing context for response drafting.")
@@ -10,12 +11,22 @@ if (!emails || !categories || !sentiments || !urgency) {
 }
 
 ;(async () => {
-  const prompts = emails.map((email, idx) => ({
-    role: "user",
-    content: `A customer service AI must reply to the following email. \nCategory: ${categories[idx]}\n Sentiment: ${sentiments[idx]}\n Urgency: ${urgency[idx]}\nEmail: \"\"\"${email}\"\"\"\nReply as a polite, professional support agent. If urgent/complaint, apologize and escalate. For billing, clarify. Always thank the customer. Keep it short.`
-  }))
+  const prompts = emails.map((email, idx) => {
+    let lang = languages && languages[idx] ? languages[idx].toLowerCase() : "english"
+    // Default to English, but if Hindi or Spanish, instruct reply in that language.
+    let prompt = `A customer service AI must reply to the following email. \nCategory: ${categories[idx]}\n Sentiment: ${sentiments[idx]}\n Urgency: ${urgency[idx]}\nEmail: """${email}"""\nReply as a polite, professional support agent. If urgent/complaint, apologize and escalate. For billing, clarify. Always thank the customer. Keep it short.`
+    if (lang === "hindi") {
+      prompt += "\nReply in Hindi."
+    } else if (lang === "spanish") {
+      prompt += "\nReply in Spanish."
+    }
+    return {
+      role: "user",
+      content: prompt
+    }
+  })
 
-  console.log("Requesting draft responses from OpenAI...")
+  console.log("Requesting draft responses from OpenAI in the detected languages...")
   const result = await TurboticOpenAI(prompts, { model: "gpt-4.1", temperature: 0 })
 
   let drafts = []
@@ -31,5 +42,6 @@ if (!emails || !categories || !sentiments || !urgency) {
     while (drafts.length < emails.length) drafts.push("Thank you for contacting us. We appreciate your message and will get back to you shortly.")
   }
   setContext("drafts", drafts)
-  console.log("Drafts generated", drafts)
+  console.log("Drafts generated with detected languages:", (languages || []).join(", "))
+  console.log("Drafts:", drafts)
 })()
